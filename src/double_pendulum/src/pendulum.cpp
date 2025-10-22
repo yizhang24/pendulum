@@ -41,8 +41,6 @@ Pendulum dsdt(const Pendulum &s, double l1, double l2, double m1, double m2,
                (1.0 / safe_denom_2);
   ret.theta1 = w1;
   ret.theta2 = w2;
-  ret.omega1 -= 1e-10 * s.omega1;
-  ret.omega2 -= 1e-10 * s.omega2;
   return ret;
 }
 
