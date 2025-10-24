@@ -1,0 +1,15 @@
+[tool.basedpyright]
+# include = ["launch", "src"]
+pythonVersion = "3.12"
+
+# Add your ROS 2 site-packages here
+extraPaths = [
+  "/opt/ros/kilted/lib/python3.12/site-packages",
+  "install/lib/python3.12/site-packages"
+]
+
+reportMissingImports = "warning"
+reportMissingModuleSource = "none"
+
+typeCheckingMode = "standard"
+useLibraryCodeForTypes = false
