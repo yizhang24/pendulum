@@ -1,17 +1,19 @@
 #include "double_pendulum/pendulum_node.h"
+#include <chrono>
 #include <rclcpp/executors.hpp>
 #include <cmath>
 using namespace std::chrono_literals;
 
 PendulumNode::PendulumNode() : rclcpp::Node("pendulum_node") {
+  this->dt_ms = 2;
   this->publisher_ =
       this->create_publisher<double_pendulum::msg::PendulumState>(
           "pendulum_state", 10);
   auto timer_callback = [this]() -> void {
-    this->state_ = rk4_step(this->state_, 0.002, 1.0, 1.0, 2.0, 2.0, 9.81);
+    this->state_ = rk4_step(this->state_, this->dt_ms / 1000.0, 1.0, 1.0, 2.0, 2.0, 9.81);
     this->publish_state(this->state_);
   };
-  this->timer_ = create_wall_timer(2ms, timer_callback);
+  this->timer_ = create_wall_timer(std::chrono::milliseconds(this->dt_ms), timer_callback);
   state_ = {M_PI / 4.0, 0.0, 0.0, 0.0};
 }
 

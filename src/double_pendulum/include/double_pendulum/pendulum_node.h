@@ -9,6 +9,7 @@ class PendulumNode : public rclcpp::Node {
   PendulumNode();
   private:
   Pendulum state_;
+  int dt_ms;
   rclcpp::TimerBase::SharedPtr timer_;
   rclcpp::Publisher<double_pendulum::msg::PendulumState>::SharedPtr publisher_;
   // rclcpp::Node::OnSetParametersCallbackHandle::SharedPtr callback_handle_;
