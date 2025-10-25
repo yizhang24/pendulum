@@ -1,7 +1,7 @@
 FROM osrf/ros:kilted-desktop-full
 
 RUN apt update && apt install -y openssh-server
-RUN apt install -y ros-$ROS_DISTRO-foxglove-bridge
+RUN apt update && apt install -y ros-$ROS_DISTRO-foxglove-bridge
 RUN mkdir /var/run/sshd
 RUN echo "root:root" | chpasswd
 RUN sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config

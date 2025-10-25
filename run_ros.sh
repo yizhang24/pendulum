@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+xhost +local:docker
 sudo docker run -d --rm \
   --name ros2 \
   --gpus all \
@@ -10,3 +11,5 @@ sudo docker run -d --rm \
   -p 2222:22 \
   -p 8765:8765 \
   --volume=".:/root/project" ros2-ssh:latest
+
+sudo docker exec -it ros2 bash
