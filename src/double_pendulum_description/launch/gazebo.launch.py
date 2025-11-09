@@ -37,7 +37,9 @@ def generate_launch_description():
                 package="ros_gz_bridge",
                 executable="parameter_bridge",
                 arguments=[
-                    "/world/double_pendulum_world/model/double_pendulum/joint_state@sensor_msgs/msg/JointState@gz.msgs.Model",
+                    "--ros-args",
+                    "-p",
+                    "config_file:=/root/project/src/double_pendulum_description/bridge.yaml",
                 ],
             ),
         ]
