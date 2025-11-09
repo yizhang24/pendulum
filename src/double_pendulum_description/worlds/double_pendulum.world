@@ -7,13 +7,12 @@
       <real_time_update_rate>1000</real_time_update_rate>
     </physics>
 
-    <!-- Lighting -->
+    <!-- Lighting and Ground -->
     <include>
       <uri>
       https://fuel.gazebosim.org/1.0/OpenRobotics/models/Sun
       </uri>
     </include>
-    <!-- Ground Plane -->
     <include>
       <uri>
         https://fuel.gazebosim.org/1.0/OpenRobotics/models/Ground Plane
@@ -23,7 +22,7 @@
     <!-- Spawn your pendulum model -->
     <include>
       <uri>model://double_pendulum</uri>
-      <pose>0 0 0 0 0 0</pose>
+      <pose>0 0 4.0 0 0 0</pose>
     </include>
 
   </world>
