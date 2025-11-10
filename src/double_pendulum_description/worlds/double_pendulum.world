@@ -23,6 +23,15 @@
     <include>
       <uri>model://double_pendulum</uri>
       <pose>0 0 4.0 0 0 0</pose>
+      <!-- <model_state name="double_pendulum">
+        <joint_state name="slider_to_l1">
+          <axis_state>
+            <position>
+              1.5
+            </position>
+          </axis_state>
+        </joint_state>
+      </model_state> -->
     </include>
 
   </world>
