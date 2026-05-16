@@ -18,7 +18,7 @@
 
     <!-- Link 1 -->
     <link name="link1">
-      <pose degrees="true">0.3 0 0 25.0 0 0</pose>
+      <pose degrees="true">0.3 0 0 0.0 0 0</pose>
       <inertial>
         <mass>1.0</mass>
         <pose>0 0 1.0 0 0 0</pose>
@@ -115,7 +115,6 @@
           <damping>1.0</damping>
         </dynamics>
       </axis>
-      <use_parent_model_frame>1</use_parent_model_frame>
     </joint>
     <!-- <joint name="l1_to_2" type="revolute">
       <parent>link1</parent>
@@ -128,12 +127,14 @@
       </axis>
     </joint> -->
     <plugin
-          filename="gz-sim-joint-state-publisher-system"
-          name="gz::sim::systems::JointStatePublisher">
+            filename="gz-sim-joint-state-publisher-system"
+            name="gz::sim::systems::JointStatePublisher"
+        >
     </plugin>
     <plugin
-      filename="gz-sim-apply-joint-force-system"
-      name="gz::sim::systems::ApplyJointForce">
+            filename="gz-sim-apply-joint-force-system"
+            name="gz::sim::systems::ApplyJointForce"
+        >
       <joint_name>world_to_slider</joint_name>
     </plugin>
   </model>
