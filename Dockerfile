@@ -7,7 +7,13 @@ RUN sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/
 RUN sed -i 's/#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config
 EXPOSE 22
 
-RUN apt install -y ros-$ROS_DISTRO-foxglove-bridge
+RUN apt-get update && \
+    apt-get install -y clangd
+
+RUN apt-get install -y ros-$ROS_DISTRO-foxglove-bridge
+
+RUN apt-get clean && \
+rm -rf /var/lib/apt/lists/*
 
 SHELL ["/bin/bash", "-c"]
 RUN echo "source /opt/ros/kilted/setup.bash" >> ~/.bashrc
