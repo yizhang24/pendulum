@@ -1,0 +1,6 @@
+Invoking command in '/root/project/src/simulator/build/simulator': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/kilted /usr/bin/cmake /root/project/src/simulator -DCMAKE_INSTALL_PREFIX=/root/project/src/simulator/install/simulator
+Invoked command in '/root/project/src/simulator/build/simulator' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/kilted /usr/bin/cmake /root/project/src/simulator -DCMAKE_INSTALL_PREFIX=/root/project/src/simulator/install/simulator
+Invoking command in '/root/project/src/simulator/build/simulator': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/kilted /usr/bin/cmake --build /root/project/src/simulator/build/simulator -- -j32 -l32
+Invoked command in '/root/project/src/simulator/build/simulator' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/kilted /usr/bin/cmake --build /root/project/src/simulator/build/simulator -- -j32 -l32
+Invoking command in '/root/project/src/simulator/build/simulator': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/kilted /usr/bin/cmake --install /root/project/src/simulator/build/simulator
+Invoked command in '/root/project/src/simulator/build/simulator' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/kilted /usr/bin/cmake --install /root/project/src/simulator/build/simulator

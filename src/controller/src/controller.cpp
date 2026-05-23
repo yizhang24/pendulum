@@ -1,4 +1,6 @@
+#include "controller/pid.hpp"
 #include "rclcpp/rclcpp.hpp"
+#include "rosgraph_msgs/msg/clock.hpp"
 #include "sensor_msgs/msg/joint_state.hpp"
 #include "std_msgs/msg/float64.hpp"
 #include <cmath>
@@ -9,13 +11,22 @@ class Controller : public rclcpp::Node {
 public:
     Controller()
         : Node("double_pendulum_controller")
+        , theta1_controller(kp1_, ki1_, kd1_)
+        , cart_controller(kpCart_, kiCart_, kdCart_)
     {
         joint_sub_ = create_subscription<sensor_msgs::msg::JointState>(
             "/joint_state", 10,
             std::bind(&Controller::joint_callback, this, std::placeholders::_1));
 
+        clock_sub_ = create_subscription<rosgraph_msgs::msg::Clock>(
+            "/clock", 10,
+            std::bind(&Controller::clock_callback, this, std::placeholders::_1));
+
         force_pub_ = create_publisher<std_msgs::msg::Float64>(
             "/force", 10);
+
+        time_pub_ = create_publisher<std_msgs::msg::Float64>(
+            "/time", 10);
 
         t1_pub_ = create_publisher<std_msgs::msg::Float64>(
             "/t1", 10);
@@ -23,21 +34,46 @@ public:
         setpoint_pub_ = create_publisher<std_msgs::msg::Float64>(
             "/setpoint", 10);
 
-        control_timer_ = create_wall_timer(
-            20ms, std::bind(&Controller::update, this));
+        theta_error_pub_ = create_publisher<std_msgs::msg::Float64>(
+            "/theta_error", 10);
+
+        integral_pub_ = create_publisher<std_msgs::msg::Float64>(
+            "/theta1_controller_integral", 10);
+
+        theta1_controller.setIntegralZone(1.0);
+
+        // control_timer_ = create_wall_timer(
+        //     20ms, std::bind(&Controller::update, this));
     }
 
 private:
     void joint_callback(const sensor_msgs::msg::JointState::SharedPtr msg)
     {
-        // Extract angles, velocities, etc.
-        // e.g., theta1 = msg->position[0], theta2 = msg->position[1]
         x_cart = msg->position[0];
         v_cart = msg->velocity[0];
         double t1 = msg->position[1];
         double w1 = msg->velocity[1];
         theta_1 = constrainAngle(t1);
-        omega_1 = std::abs(w1);
+        omega_1 = w1;
+    }
+
+    void clock_callback(const rosgraph_msgs::msg::Clock::SharedPtr msg)
+    {
+        double sec = msg->clock.sec;
+        double nsec = msg->clock.nanosec;
+        time = sec + nsec * 1e-9;
+
+        if (time < prev_time) {
+            std::cout << "Time travel detected, resetting controllers" << std::endl;
+            theta1_controller.reset(kp1_, ki1_, kd1_);
+            theta1_controller.setIntegralZone(1.0);
+            cart_controller.reset(kpCart_, kiCart_, kdCart_);
+            applied_force = 0.0;
+        } else if (time != prev_time) {
+            update_controllers();
+        }
+        prev_time = time;
+        publish();
     }
 
     double constrainAngle(double x)
@@ -48,50 +84,74 @@ private:
         return x - M_PI;
     }
 
-    void update()
+    void update_controllers()
     {
-        double setpoint = 0;
-        double p_err = setpoint - theta_1;
-        double prop = (kp1_ * p_err);
-        double deriv = (kd1_ * -omega_1);
+        double dt = time - prev_time;
+        double f_theta = theta1_controller.compute(0.0, theta_1, omega_1, dt);
 
-        double f_theta = prop + deriv;
+        applied_force = fmax(fmin(f_theta, k_max_force), -k_max_force);
+    }
 
-        double f_cart = 0 * (-kpx_ * x_cart + -kdx_ * v_cart);
-
-        double f
-            = fmax(fmin(f_theta + f_cart, k_max_force), -k_max_force);
-
+    void publish()
+    {
         std_msgs::msg::Float64 cmd;
-        cmd.data = f;
+        cmd.data = applied_force;
         force_pub_->publish(cmd);
 
         std_msgs::msg::Float64 t1;
         t1.data = theta_1;
         t1_pub_->publish(t1);
 
-        std_msgs::msg::Float64 sp;
-        sp.data = setpoint;
-        setpoint_pub_->publish(sp);
+        // std_msgs::msg::Float64 sp;
+        // sp.data = setpoint;
+        // setpoint_pub_->publish(sp);
+        //
+        //
+        //
+        std_msgs::msg::Float64 t;
+        t.data = time;
+        time_pub_->publish(t);
+
+        std_msgs::msg::Float64 i;
+        i.data = theta1_controller.getIntegral() * ki1_;
+        integral_pub_->publish(i);
+
+        std_msgs::msg::Float64 e;
+        e.data = 0 - theta_1;
+        theta_error_pub_->publish(e);
     }
+
+    rclcpp::Subscription<sensor_msgs::msg::JointState>::SharedPtr joint_sub_;
+    rclcpp::Subscription<rosgraph_msgs::msg::Clock>::SharedPtr clock_sub_;
+    rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr force_pub_;
+    rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr t1_pub_;
+    rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr time_pub_;
+    rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr setpoint_pub_;
+    rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr theta_error_pub_;
+    rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr integral_pub_;
+    rclcpp::TimerBase::SharedPtr control_timer_;
+
+    double time;
+    double prev_time = 0.0;
 
     double x_cart;
     double v_cart;
     double theta_1;
     double omega_1;
-    rclcpp::Subscription<sensor_msgs::msg::JointState>::SharedPtr joint_sub_;
-    rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr force_pub_;
-    rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr t1_pub_;
-    rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr setpoint_pub_;
-    rclcpp::TimerBase::SharedPtr control_timer_;
 
-    double kp1_ = 80.0;
+    double kp1_ = 100.0;
+    double ki1_ = 60.0;
     double kd1_ = 12.0;
 
-    double kpx_ = 1.0;
-    double kdx_ = 5.0;
+    double kpCart_ = 80.0;
+    double kiCart_ = 80.0;
+    double kdCart_ = 5.0;
 
-    double k_centering_factor = 1.0 * (M_PI / 180.0);
+    PIDController theta1_controller;
+    PIDController cart_controller;
+
+    double applied_force = 0.0;
+
     double k_max_force = 15;
 };
 
