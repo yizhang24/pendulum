@@ -41,9 +41,6 @@ public:
             "/theta1_controller_integral", 10);
 
         theta1_controller.setIntegralZone(1.0);
-
-        // control_timer_ = create_wall_timer(
-        //     20ms, std::bind(&Controller::update, this));
     }
 
 private:
@@ -103,12 +100,6 @@ private:
         t1.data = theta_1;
         t1_pub_->publish(t1);
 
-        // std_msgs::msg::Float64 sp;
-        // sp.data = setpoint;
-        // setpoint_pub_->publish(sp);
-        //
-        //
-        //
         std_msgs::msg::Float64 t;
         t.data = time;
         time_pub_->publish(t);
