@@ -1,9 +1,0 @@
-/root/project/src/simulator/build/simulator/CMakeFiles/uninstall.dir
-/root/project/src/simulator/build/simulator/CMakeFiles/simulator_uninstall.dir
-/root/project/src/simulator/build/simulator/CMakeFiles/test.dir
-/root/project/src/simulator/build/simulator/CMakeFiles/edit_cache.dir
-/root/project/src/simulator/build/simulator/CMakeFiles/rebuild_cache.dir
-/root/project/src/simulator/build/simulator/CMakeFiles/list_install_components.dir
-/root/project/src/simulator/build/simulator/CMakeFiles/install.dir
-/root/project/src/simulator/build/simulator/CMakeFiles/install/local.dir
-/root/project/src/simulator/build/simulator/CMakeFiles/install/strip.dir
