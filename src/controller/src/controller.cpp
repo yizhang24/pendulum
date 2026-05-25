@@ -88,8 +88,9 @@ private:
     {
         double dt = time - prev_time;
         double f_theta = theta1_controller.compute(0.0, theta_1, omega_1, dt);
-
-        applied_force = fmax(fmin(f_theta, k_max_force), -k_max_force);
+        double f_cart = cart_controller.compute(0.0, x_cart, v_cart, dt);
+        double f_combined = f_theta + f_cart;
+        applied_force = fmax(fmin(f_combined, k_max_force), -k_max_force);
     }
 
     void publish()
@@ -143,16 +144,16 @@ private:
     double ki1_ = 60.0;
     double kd1_ = 12.0;
 
-    double kpCart_ = 80.0;
-    double kiCart_ = 80.0;
-    double kdCart_ = 5.0;
+    double kpCart_ = -5.0;
+    double kiCart_ = -1.0;
+    double kdCart_ = -2.0;
 
     PIDController theta1_controller;
     PIDController cart_controller;
 
     double applied_force = 0.0;
 
-    double k_max_force = 15;
+    double k_max_force = 50;
 };
 
 int main(int argc, char* argv[])
