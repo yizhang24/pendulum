@@ -1,10 +1,10 @@
 # Pendulum
-Learning the basics of Gazebo and ROS2 by stabilizing a simulated inverted pendulum.
+Learning the basics of Gazebo and ROS 2 by stabilizing a simulated inverted pendulum.
 
 ## Structure
-Contains two ROS2 packages, `simulator` and `controller`.
+Contains two ROS 2 packages, `simulator` and `controller`.
 
-The `simulator` packages contains SDF files describing the pendulum. The state of the system is published to the `joint_state` topic and the simulation listens for control input on the `force` topic. Run the simulation by running:
+The `simulator` packages contains SDF files describing the pendulum. The state of the system is published to the `joint_state` topic and the simulation listens for control input on the `force` topic. Run the simulation using:
 ```bash
 ros2 launch simulator gazebo.launch.py
 ```
