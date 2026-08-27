@@ -21,6 +21,15 @@
 			<inertial>
 				<mass>1.0</mass>
 				<pose>0 0 1.0 0 0 0</pose>
+				<!-- Match the I=1 kg*m^2 inertia used by the LQR model. -->
+				<inertia>
+					<ixx>1.0</ixx>
+					<iyy>1.0</iyy>
+					<izz>1.0</izz>
+					<ixy>0.0</ixy>
+					<ixz>0.0</ixz>
+					<iyz>0.0</iyz>
+				</inertia>
 			</inertial>
 			<visual name="vis_link">
 				<pose>0 0 1.0 0 0 0</pose>
@@ -54,7 +63,6 @@
 					<upper>100.0</upper>
 				</limit>
 				<dynamics>
-					<friction>0.5</friction>
 					<damping>0.1</damping>
 				</dynamics>
 			</axis>
@@ -82,6 +90,13 @@
         >
 			<!-- Let ROS apply force to the slider/cart -->
 			<joint_name>world_to_slider</joint_name>
+		</plugin>
+		<plugin
+            filename="gz-sim-apply-joint-force-system"
+            name="gz::sim::systems::ApplyJointForce"
+        >
+			<!-- Let the benchmarker apply an external torque to the pendulum. -->
+			<joint_name>slider_to_l1</joint_name>
 		</plugin>
 	</model>
 </sdf>
