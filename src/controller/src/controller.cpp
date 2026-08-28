@@ -109,7 +109,7 @@ private:
     PIDController cart_controller;
 
     const std::array<double, 4> lqr_gain_ {
-        -10.0000, -16.8284, 151.8162, 63.9680
+        -10.0000, -16.4138, 145.1047, 62.4718
     };
     const double max_force_ = 50.0;
 };

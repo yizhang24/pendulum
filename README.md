@@ -32,7 +32,7 @@ The parameters are:
 Q = diag(10, 1, 100, 10), R = 0.1
 ```
 
-Which, after solving the CARE, produces the resulting gain ```K = [-10.0000, -16.1893, 145.5400, 60.0943]```
+Which, after solving the CARE, produces the resulting gain ```K = [-10.0000, -16.4138, 145.1047, 62.4718]```
 
 Both controllers use the same 50 N force limit.
 
